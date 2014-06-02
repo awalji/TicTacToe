@@ -95,7 +95,8 @@ function initGameBoard(){
 }
 
 function showMessage(message){
-	alert(message)
+	var msg = document.getElementById("message")
+	msg.innerHTML=message
 }
 
 
@@ -394,7 +395,12 @@ Select a tile to start
     
 <BR>
 <BR>
- 
+
+<div id = "message">
+
+</div> 
+
+
 <center> 
 <input type = button class = "tile" name = b00 value = "" onclick = playMoves(0,0) > 
 <input type = button class = "tile" name = b01 value = "" onclick = playMoves(0,1) > 
