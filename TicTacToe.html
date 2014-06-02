@@ -94,18 +94,22 @@ function initGameBoard(){
 	}
 }
 
+function showMessage(message){
+	alert(message)
+}
+
 
 // Plays  moves by marking the human player's chosen tile and then playing the computer's turn and determining the outcome of the game based on the moves
 function playMoves(row, col){
   
     if (status == 0)
   	{	
-		alert("This game has ended. To start a new game, press Restart")
+		showMessage("This game has ended. To start a new game, press Restart")
 		return 0;
   	}
 
   	if ( emptyTile(row,col) == false ) {
-		alert("This move is already taken. Select another square")
+		showMessage("This move is already taken. Select another square")
 		return
   	}	
   
@@ -114,13 +118,13 @@ function playMoves(row, col){
   	emptySpaceCount--;
    
     if (gameStatus(board) == humanPlayer ) {
-		alert("You win!")
+		showMessage("You win!")
 		status = 0
 		return
     }
  
     if (gameStatus(board)== "draw") {
-		alert('Game ended in a draw')	
+		showMessage('Game ended in a draw')	
 		status = 0 
 		return
     }
@@ -129,13 +133,13 @@ function playMoves(row, col){
 
 
   	if (gameStatus(board) == computerOpponent) {
-		alert('You Lose!')
+		showMessage('You Lose!')
 		status = 0
 		return
     }
  
   	if (gameStatus(board)== "draw") {
-		alert("Game ended in a draw")
+		showMessage("Game ended in a draw")
 		status = 0 
 		return
     }
