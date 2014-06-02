@@ -99,9 +99,15 @@ function showMessage(message){
 	msg.innerHTML=message
 }
 
+function hideMessage(){
+	showMessage("")
+}
+
 
 // Plays  moves by marking the human player's chosen tile and then playing the computer's turn and determining the outcome of the game based on the moves
 function playMoves(row, col){
+
+	hideMessage();
   
     if (status == 0)
   	{	
@@ -183,6 +189,8 @@ function emptyTile(row,col){
 function clearBoard(){
 
   	status = 1
+
+  	hideMessage();
 
   	initMinimaxGameBoard();
 
