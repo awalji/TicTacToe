@@ -1,0 +1,413 @@
+<HTML> 
+
+
+<HEAD> 
+
+<TITLE>Tic Tac Toe</TITLE> 
+
+<style type="text/css">
+html {
+    	background: #D4E3E8;
+}
+
+.content {
+	font-family: Arial;
+	width: 15.45em;
+    margin: 0 auto;
+}
+
+.board {
+	height: 15.45em;
+	margin: 20px auto;
+}
+
+.tile {
+	border: 1px solid #748A91;
+	background: rgba(255,255,255,0.5);
+	text-align: center;
+	vertical-align: middle;
+	width: 5em;
+	height: 5em;
+	float: left;
+	cursor: pointer;
+}
+
+.tile:hover {
+    	background: white;
+}
+
+.tile:active {
+    	background: rgba(255,255,255,0.3);
+}
+
+.nofloat {
+	clear: both;	
+}
+
+.X, .O {
+	font-size: 3em;
+	position: relative;
+	top: 0.3em;
+	display: none;
+}	
+	
+</style>
+
+
+<script language = javascript> 
+
+/* 
+Tic Tac Toe game implemented in javascript.  
+Computer plays as a perfect player.  Computer's moves are determined using minimax algorithm.
+Minimax implementation is based on/adapted from Natthawut Kulnirundorn - http://m3rlinez.blogspot.ca/2007/07/simple-tic-tac-toe-ai.html
+Future improvements to this include removing hard coding of the board implementation (dynamically generating the board display,
+marking of spaces, etc), implementing alpha-beta pruning on the minimax algorithm (even though it runs reasonably fast), adding
+levels of difficulty so the computer doesn't always play as a perfect player if the user selects an easier gamelevel, 
+and improving the overall UI/display (e.g. highlighting winning moves, etc)
+*/ 
+
+
+var computerOpponent = "O"
+var humanPlayer = "X"
+var status = 1
+var emptySpace = 0
+var emptySpaceCount = 9
+
+// Variables for computing Computer's best move
+var minimaxGameBoard;
+var currentTurn;
+
+initMinimaxGameBoard();
+initGameBoard();
+
+ 
+// Initializes the internal game state
+function initGameBoard(){
+	board = new Array(3);
+	for(var i = 0 ; i < board.length ; i++)
+	{
+		board[i] = new Array(3);
+		for(var j = 0 ; j < board[i].length ; j++)
+		{
+				board[i][j] = emptySpace;
+		}
+	}
+}
+
+
+// Plays  moves by marking the human player's chosen tile and then playing the computer's turn and determining the outcome of the game based on the moves
+function playMoves(row, col){
+  
+    if (status == 0)
+  	{	
+		alert("This game has ended. To start a new game, press Restart")
+		return 0;
+  	}
+
+  	if ( emptyTile(row,col) == false ) {
+		alert("This move is already taken. Select another square")
+		return
+  	}	
+  
+  	display(row,col, humanPlayer)
+  	board[row][col] = humanPlayer
+  	emptySpaceCount--;
+   
+    if (gameStatus(board) == humanPlayer ) {
+		alert("You win!")
+		status = 0
+		return
+    }
+ 
+    if (gameStatus(board)== "draw") {
+		alert('Game ended in a draw')	
+		status = 0 
+		return
+    }
+
+  	computerTurn()
+
+
+  	if (gameStatus(board) == computerOpponent) {
+		alert('You Lose!')
+		status = 0
+		return
+    }
+ 
+  	if (gameStatus(board)== "draw") {
+		alert("Game ended in a draw")
+		status = 0 
+		return
+    }
+   
+}
+ 
+//marks the tile on the game board that has been selected by the human or computer player 
+function display(row,col, player){
+
+	if (row == 0 && col == 0)
+		document.gameDisplay.b00.value = player
+	else if (row == 0 && col == 1)
+		document.gameDisplay.b01.value = player
+	else if (row == 0 && col == 2)
+		document.gameDisplay.b02.value = player
+	else if (row == 1 && col == 0)
+		document.gameDisplay.b10.value = player
+	else if (row == 1 && col == 1)
+		document.gameDisplay.b11.value = player
+	else if (row == 1 && col == 2)
+		document.gameDisplay.b12.value = player
+	else if (row == 2 && col == 0)
+		document.gameDisplay.b20.value = player
+	else if (row == 2 && col == 1)
+		document.gameDisplay.b21.value = player
+	else if (row == 2 && col == 2) 
+		document.gameDisplay.b22.value = player
+}
+ 
+//checks to see if a space is empty
+function emptyTile(row,col){
+	if ( board[row][col] != emptySpace )
+		return false
+	else
+		return true
+}
+ 
+
+//clears the board for a new game and resets game variables 
+function clearBoard(){
+
+  	status = 1
+
+  	initMinimaxGameBoard();
+
+  	initGameBoard();
+
+ 	emptySpaceCount = 9
+
+  	document.gameDisplay.b00.value = ""
+  	document.gameDisplay.b01.value = ""
+  	document.gameDisplay.b02.value = ""
+  	document.gameDisplay.b10.value = ""
+  	document.gameDisplay.b11.value = ""
+  	document.gameDisplay.b12.value = ""
+  	document.gameDisplay.b20.value = ""
+  	document.gameDisplay.b21.value = ""
+  	document.gameDisplay.b22.value = ""
+	}
+
+//checks the current game status to see if either player has wom, if the game is a draw, or if it's still in progress 
+function gameStatus(gameBoard){
+	
+	//check for three in a row win and return symbol of winning player
+	for(var i = 0 ; i < gameBoard.length ; i++){
+		if(gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2]){
+			if(gameBoard[i][0] != emptySpace){
+				return gameBoard[i][0];
+			}
+		}
+	}
+	
+	//check for three in a column win and return symbol of winning player
+	for(var j = 0 ; j < gameBoard[0].length ; j++){
+		if(gameBoard[0][j] == gameBoard[1][j] && gameBoard[1][j] == gameBoard[2][j]){
+			if(gameBoard[0][j] != emptySpace){
+				return gameBoard[0][j];
+			}
+		}
+	}
+	
+	//check for diagonal win and return symbol of winning player
+	if((gameBoard[0][0] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][2]) || (gameBoard[0][2] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][0])){
+		if(gameBoard[1][1] != emptySpace){
+			return gameBoard[1][1];
+		}
+	}
+	
+	//check for draw
+	if(emptySpaceCount == 0){
+		return "draw";
+	}
+
+	//check for game still in progress
+	return "notend";
+}
+
+
+
+
+// Initialize internal game copy for cpu turn calculation
+function initMinimaxGameBoard(){
+	minimaxGameBoard = new Array(3);
+	for(var i = 0 ; i < minimaxGameBoard.length ; i++){
+		minimaxGameBoard[i] = new Array(3);
+	}
+}
+
+// Copy current game for minimax algorithm turn calculation
+function copyGameBoard(){
+	for(var i = 0 ; i < minimaxGameBoard.length ; i++){
+		for(var j = 0 ; j < minimaxGameBoard[i].length; j++){
+			minimaxGameBoard[i][j] = board[i][j];
+		}
+	}
+}
+
+
+// Toggles between player/computer only for computer turn calculation in minimax algorithm
+function swapTurn(){
+	if(currentTurn == computerOpponent)
+		currentTurn = humanPlayer;
+	else
+		currentTurn = computerOpponent;
+}
+
+//determines the computer move and marks the selected tile for the computer player.
+function computerTurn(){
+	
+	copyGameBoard(); // Initialize search space to match current game state
+	
+	currentTurn = computerOpponent;
+	
+	// currentTurnScore = turn score, ci/cj = row/col of best move, bestScore = best move score
+	var currentTurnScore,ci,cj,bestScore = -1000;
+	
+	for(var i = 0 ; i < minimaxGameBoard.length ; i++){
+		for(var j = 0 ; j < minimaxGameBoard[i].length ; j++){
+			if(minimaxGameBoard[i][j] == emptySpace){ // Skip over unavailable spaces
+
+				// Mark available space to evaluate game state
+				minimaxGameBoard[i][j] = currentTurn;
+				
+				emptySpaceCount--; // Reduce available spaces by 1
+				
+				swapTurn(); // Toggle turn to figure minimal player move next
+				
+				currentTurnScore = search(1); // Run minimax algorithm to evaluate game state
+				
+				// Restore minimax algorithm game board state to current game state (to consider another move)
+				minimaxGameBoard[i][j] = emptySpace; 
+				
+				emptySpaceCount++;
+				
+				swapTurn();
+
+				// Keep track of best move and score yet
+				if(bestScore == -1000){ 
+					bestScore = currentTurnScore;
+					ci = i;
+					cj = j;
+				}
+				else if(currentTurnScore > bestScore){
+					bestScore = currentTurnScore;
+					ci = i;
+					cj = j;
+				}
+			}
+		}
+	}
+	
+	board[ci][cj] = computerOpponent;
+	display(ci, cj, computerOpponent)
+	
+	emptySpaceCount--;
+
+}
+
+//minimax algorithm to determine best possible computer move
+function search(level){
+
+	// Base case: if game over, just return the score
+	var currentTurnScore = gameStatus(minimaxGameBoard);
+	
+	if(currentTurnScore == computerOpponent){
+		return  100-level; // Positive number for computer win (higher score for quicker win)
+	}
+	
+	else if(currentTurnScore == humanPlayer){
+		return level-100;  // Negative number for player win (lower score for quicker win)
+	}
+
+	else if(currentTurnScore == "draw"){
+		return 0;          // Zero for draw
+	}
+
+
+	/*
+	   Recursive case:
+	   	For each available move:
+			compute score of resulting game playing that move
+			keep track of best score
+		Return best score out of available moves
+	 */
+	var bestScore = -1000;
+	var temp;
+	
+	for(var i = 0 ; i < minimaxGameBoard.length ; i++){
+		for(var j = 0 ; j < minimaxGameBoard[i].length ; j++){
+			if(minimaxGameBoard[i][j] == emptySpace){ // Only consider available moves
+				
+				// Mark available space
+				minimaxGameBoard[i][j] = currentTurn;
+				swapTurn();
+				emptySpaceCount--;
+
+				// Compute score game
+				temp = search(level + 1);
+
+				// Unmark move to consider another possible move
+				swapTurn();
+				minimaxGameBoard[i][j] = emptySpace;
+				emptySpaceCount++;
+
+				// Keep score if this move is best so far
+				if(bestScore == -1000){
+					bestScore = temp;
+				}else if(currentTurn == computerOpponent){
+					if(temp > bestScore) bestScore = temp;
+				}else if(currentTurn == humanPlayer){
+					if(temp < bestScore) bestScore = temp;
+				}
+			}	
+		}
+	}
+	return bestScore; // Return best score for this 'level' (game depth)
+}
+
+</script> 
+</HEAD> 
+<BODY> 
+ 
+ 
+<form name = gameDisplay> 
+
+Select a tile to start
+    
+<BR>
+<BR>
+        
+<input type = button name = restart value = "Restart " onclick = clearBoard()> 
+    
+<BR>
+<BR>
+ 
+<center> 
+<input type = button class = "tile" name = b00 value = "" onclick = playMoves(0,0) > 
+<input type = button class = "tile" name = b01 value = "" onclick = playMoves(0,1) > 
+<input type = button class = "tile" name = b02 value = "" onclick = playMoves(0,2) >
+<input type = button class = "tile nofloat" name = b10 value = "" onclick = playMoves(1,0) > 
+<input type = button class = "tile" name = b11 value = "" onclick = playMoves(1,1) > 
+<input type = button class = "tile" name = b12 value = "" onclick = playMoves(1,2) >
+<input type = button class = "tile nofloat" name = b20 value = "" onclick = playMoves(2,0) > 
+<input type = button class = "tile" name = b21 value = "" onclick = playMoves(2,1) > 
+<input type = button class = "tile" name = b22 value = "" onclick = playMoves(2,2) >
+</center> 
+
+
+
+ 
+</form> 
+
+ 
+</BODY> 
+</HTML> 
