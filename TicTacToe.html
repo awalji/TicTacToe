@@ -165,7 +165,7 @@ function playMoves(row, col){
 //marks the tile on the game board that has been selected by the human or computer player 
 function display(row,col, player){
 
-	document.gameDisplay[('b'+row)+col].value = player
+	document.getElementById(('b'+row)+col).innerHTML = player
 	
 }
  
@@ -193,7 +193,7 @@ function clearBoard(){
 
  	for (var i=0; i<boardSize; i++){
  		for (var j=0; j<boardSize; j++){
- 			document.gameDisplay[('b'+i)+j].value = ""
+ 			document.getElementById(('b'+i)+j).innerHTML = ""
  		}
  	}
 
@@ -419,14 +419,12 @@ function search(level){
 <BODY> 
  
  
-<form name = gameDisplay> 
-
 Select a tile to start
     
 <BR>
 <BR>
         
-<input type = button name = restart value = "Restart " onclick = clearBoard()> 
+<button id = restart onclick = clearBoard()> Restart </button>
     
 <BR>
 <BR>
@@ -437,21 +435,22 @@ Select a tile to start
 
 
 <center> 
-<input type = button class = "tile" name = b00 value = "" onclick = playMoves(0,0) > 
-<input type = button class = "tile" name = b01 value = "" onclick = playMoves(0,1) > 
-<input type = button class = "tile" name = b02 value = "" onclick = playMoves(0,2) >
-<input type = button class = "tile nofloat" name = b10 value = "" onclick = playMoves(1,0) > 
-<input type = button class = "tile" name = b11 value = "" onclick = playMoves(1,1) > 
-<input type = button class = "tile" name = b12 value = "" onclick = playMoves(1,2) >
-<input type = button class = "tile nofloat" name = b20 value = "" onclick = playMoves(2,0) > 
-<input type = button class = "tile" name = b21 value = "" onclick = playMoves(2,1) > 
-<input type = button class = "tile" name = b22 value = "" onclick = playMoves(2,2) >
+
+
+<button class = "tile nofloat" id = b00 onclick = playMoves(0,0) /> 
+<button class = "tile" id = b01 onclick = playMoves(0,1) /> 
+<button class = "tile" id = b02 onclick = playMoves(0,2) />
+<button class = "tile nofloat" id = b10 onclick = playMoves(1,0) /> 
+<button class = "tile" id = b11 onclick = playMoves(1,1) /> 
+<button class = "tile" id = b12 onclick = playMoves(1,2) />
+<button class = "tile nofloat" id = b20 onclick = playMoves(2,0) /> 
+<button class = "tile" id = b21 onclick = playMoves(2,1) /> 
+<button class = "tile" id = b22 onclick = playMoves(2,2) />
 </center> 
 
 
 
- 
-</form> 
+
 
  
 </BODY> 
