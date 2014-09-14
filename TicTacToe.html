@@ -161,6 +161,28 @@ function playMoves(row, col){
     }
    
 }
+
+//creates game UI
+function generateGameBoard(){
+	for (var i=0; i<boardSize; i++){
+		for (var j=0; j<boardSize; j++){
+			var b = document.createElement("button")
+			b.id = ("b"+i)+j
+			b.className = 'tile'
+			if (j == 0){
+				b.className += " nofloat"
+			}
+			b.onclick = getClickHandler(i, j)
+			document.body.appendChild(b)
+		}
+	}
+}
+
+function getClickHandler(i, j){
+	return function(){
+		playMoves(i, j)
+	}
+}
  
 //marks the tile on the game board that has been selected by the human or computer player 
 function display(row,col, player){
@@ -436,16 +458,9 @@ Select a tile to start
 
 <center> 
 
-
-<button class = "tile nofloat" id = b00 onclick = playMoves(0,0) /> 
-<button class = "tile" id = b01 onclick = playMoves(0,1) /> 
-<button class = "tile" id = b02 onclick = playMoves(0,2) />
-<button class = "tile nofloat" id = b10 onclick = playMoves(1,0) /> 
-<button class = "tile" id = b11 onclick = playMoves(1,1) /> 
-<button class = "tile" id = b12 onclick = playMoves(1,2) />
-<button class = "tile nofloat" id = b20 onclick = playMoves(2,0) /> 
-<button class = "tile" id = b21 onclick = playMoves(2,1) /> 
-<button class = "tile" id = b22 onclick = playMoves(2,2) />
+<script>
+generateGameBoard();
+</script>
 </center> 
 
 
